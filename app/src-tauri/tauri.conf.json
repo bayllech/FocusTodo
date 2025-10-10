@@ -1,0 +1,95 @@
+{
+  "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
+  "productName": "FocusTodo",
+  "version": "0.1.0",
+  "identifier": "com.tauri.dev",
+  "build": {
+    "frontendDist": "../dist",
+    "devUrl": "http://localhost:5173",
+    "beforeDevCommand": "npm run dev",
+    "beforeBuildCommand": "npm run build"
+  },
+  "app": {
+    "windows": [
+      {
+        "title": "FocusTodo",
+        "label": "main",
+        "width": 800,
+        "height": 600,
+        "resizable": true,
+        "fullscreen": false,
+        "visible": true,
+        "center": true
+      },
+      {
+        "title": "FocusTodo Mini",
+        "label": "floating",
+        "width": 360,
+        "height": 480,
+        "resizable": true,
+        "minWidth": 320,
+        "minHeight": 360,
+        "fullscreen": false,
+        "decorations": false,
+        "transparent": true,
+        "alwaysOnTop": false,
+        "visible": false,
+        "skipTaskbar": true,
+        "shadow": true
+      }
+    ],
+    "security": {
+      "csp": null,
+      "capabilities": [
+        {
+          "identifier": "main-capability",
+          "windows": [
+            "main"
+          ],
+          "permissions": [
+            "core:default",
+            "core:window:allow-show",
+            "core:window:allow-hide",
+            "core:window:allow-close",
+            "core:window:allow-set-focus",
+            "core:window:allow-is-visible",
+            "core:window:allow-destroy",
+            "core:window:allow-center",
+            "core:window:allow-set-position",
+            "core:window:allow-set-size",
+            "core:webview:allow-webview-position",
+            "core:webview:allow-webview-size",
+            "core:window:allow-outer-position",
+            "core:window:allow-outer-size"
+          ]
+        },
+        {
+          "identifier": "floating-capability",
+          "windows": [
+            "floating"
+          ],
+          "permissions": [
+            "core:default",
+            "core:window:allow-show",
+            "core:window:allow-hide",
+            "core:window:allow-close",
+            "core:window:allow-set-focus",
+            "core:window:allow-is-visible",
+            "core:window:allow-start-dragging"
+          ]
+        }
+      ]
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}

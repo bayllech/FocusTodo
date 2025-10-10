@@ -1,0 +1,229 @@
+/* 番茄时钟样式 */
+.pomodoro-timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.timer-header {
+  width: 100%;
+}
+
+.timer-type-selector {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  background: var(--bg-primary);
+  border-radius: 8px;
+}
+
+.type-button {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.type-button:hover:not(:disabled) {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.type-button.active {
+  background: var(--accent);
+  color: white;
+}
+
+.type-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.timer-display {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timer-circle {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.timer-circle svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.timer-track {
+  stroke: var(--border-color);
+}
+
+.timer-progress {
+  stroke: var(--accent);
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear;
+}
+
+.timer-time {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 3rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.timer-controls {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.timer-button {
+  padding: 0.75rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 100px;
+}
+
+.timer-button.start,
+.timer-button.resume {
+  background: var(--accent);
+}
+
+.timer-button.start:hover,
+.timer-button.resume:hover {
+  background: var(--accent-hover);
+  transform: translateY(-1px);
+}
+
+.timer-button.pause {
+  background: #f59e0b;
+}
+
+.timer-button.pause:hover {
+  background: #d97706;
+  transform: translateY(-1px);
+}
+
+.timer-button.reset {
+  background: #64748b;
+}
+
+.timer-button.reset:hover {
+  background: #475569;
+  transform: translateY(-1px);
+}
+
+.timer-info {
+  text-align: center;
+}
+
+.timer-hint {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.timer-stats {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+}
+
+/* 配置摘要区域 */
+.config-summary {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: var(--bg-primary);
+  border-radius: 12px;
+}
+
+.config-summary h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+/* 悬浮窗番茄钟样式 */
+.floating-pomodoro {
+  padding: 0.75rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  margin-bottom: 0.75rem;
+}
+
+.pomodoro-config-mini {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.pomodoro-config-mini .config-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.pomodoro-config-mini .label {
+  font-size: 0.75rem;
+  color: var(--text-tertiary);
+}
+
+.pomodoro-config-mini .value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.pomodoro-hint {
+  font-size: 0.7rem;
+  text-align: center;
+  color: var(--text-tertiary);
+  margin: 0;
+}
+
+/* 悬浮窗简化版样式 */
+.floating-timer {
+  padding: 0.75rem;
+}
+
+.floating-timer .timer-time {
+  font-size: 1.5rem;
+}
+
+.floating-timer .timer-display {
+  width: 120px;
+  height: 120px;
+}
+
+.floating-timer .timer-button {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  min-width: 60px;
+}

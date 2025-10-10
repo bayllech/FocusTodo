@@ -1,0 +1,52 @@
+:root {
+  color-scheme: light dark;
+  --focus-font-family: 'SF Pro', 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system,
+    BlinkMacSystemFont, sans-serif;
+  --focus-radius-lg: 12px;
+  --focus-shadow-soft: 0 20px 40px rgba(15, 23, 42, 0.08);
+
+  --focus-color-bg: rgba(248, 250, 252, 0.9);
+  --focus-color-bg-elevated: rgba(255, 255, 255, 0.8);
+  --focus-color-border: rgba(148, 163, 184, 0.25);
+  --focus-color-text: #0f172a;
+  --focus-color-text-secondary: #475569;
+  --focus-color-accent: #2563eb;
+  --focus-surface-muted: rgba(248, 250, 252, 0.65);
+  --focus-surface-card: rgba(255, 255, 255, 0.55);
+  --focus-input-bg: rgba(255, 255, 255, 0.65);
+  --focus-border-strong: rgba(37, 99, 235, 0.35);
+  --focus-focus-ring: rgba(37, 99, 235, 0.55);
+  --focus-focus-ring-shadow: rgba(37, 99, 235, 0.18);
+  --focus-ghost-bg: transparent;
+  --focus-ghost-border: rgba(148, 163, 184, 0.25);
+  --focus-ghost-hover-bg: rgba(37, 99, 235, 0.08);
+  --focus-secondary-bg: rgba(37, 99, 235, 0.1);
+  --focus-secondary-border: rgba(37, 99, 235, 0.35);
+  --focus-secondary-hover-bg: rgba(37, 99, 235, 0.18);
+  --focus-shadow-strong: 0 20px 50px rgba(15, 23, 42, 0.12);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --focus-color-bg: #0b1220;
+    --focus-color-bg-elevated: rgba(12, 19, 33, 0.92);
+    --focus-color-border: rgba(94, 106, 133, 0.45);
+    --focus-color-text: #f1f5f9;
+    --focus-color-text-secondary: #cbd5f5;
+    --focus-color-accent: #60a5fa;
+    --focus-surface-muted: rgba(18, 27, 44, 0.88);
+    --focus-surface-card: rgba(21, 31, 50, 0.92);
+    --focus-input-bg: rgba(11, 18, 33, 0.9);
+    --focus-border-strong: rgba(125, 211, 252, 0.45);
+    --focus-focus-ring: rgba(125, 211, 252, 0.6);
+    --focus-focus-ring-shadow: rgba(96, 165, 250, 0.28);
+    --focus-ghost-bg: rgba(20, 30, 48, 0.82);
+    --focus-ghost-border: rgba(94, 106, 133, 0.5);
+    --focus-ghost-hover-bg: rgba(43, 56, 79, 0.85);
+    --focus-secondary-bg: rgba(59, 130, 246, 0.18);
+    --focus-secondary-border: rgba(125, 211, 252, 0.4);
+    --focus-secondary-hover-bg: rgba(59, 130, 246, 0.28);
+    --focus-shadow-soft: 0 30px 60px rgba(2, 6, 23, 0.55);
+    --focus-shadow-strong: 0 40px 70px rgba(2, 6, 23, 0.6);
+  }
+}
