@@ -1,0 +1,67 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 - 方案二的清新渐变 -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#5B86E5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#36D1DC;stop-opacity:1" />
+    </linearGradient>
+    <!-- 柔和阴影 -->
+    <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="8"/>
+      <feOffset dx="0" dy="4" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.35"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- 背景圆角矩形 -->
+  <rect x="80" y="80" width="864" height="864" rx="200" ry="200" fill="url(#bgGradient)"/>
+
+  <!-- 任务列表 - 直接显示在背景上,4个任务项 -->
+  <g filter="url(#shadow)">
+    <!-- 第一项 - 已完成 -->
+    <circle cx="300" cy="350" r="35" fill="white" opacity="0.95"/>
+    <path d="M 282 350 L 295 363 L 322 336"
+          stroke="#4CAF50" stroke-width="8" stroke-linecap="round"
+          stroke-linejoin="round" fill="none"/>
+    <rect x="370" y="337" width="280" height="26" rx="13" fill="white" opacity="0.9"/>
+    <rect x="670" y="337" width="120" height="26" rx="13" fill="white" opacity="0.75"/>
+
+    <!-- 第二项 - 已完成 -->
+    <circle cx="300" cy="480" r="35" fill="white" opacity="0.95"/>
+    <path d="M 282 480 L 295 493 L 322 466"
+          stroke="#4CAF50" stroke-width="8" stroke-linecap="round"
+          stroke-linejoin="round" fill="none"/>
+    <rect x="370" y="467" width="350" height="26" rx="13" fill="white" opacity="0.9"/>
+
+    <!-- 第三项 - 进行中(蓝色高亮) -->
+    <circle cx="300" cy="610" r="38" fill="white" opacity="0.95"/>
+    <circle cx="300" cy="610" r="28" stroke="#5B86E5" stroke-width="7" fill="none"/>
+    <rect x="370" y="597" width="400" height="26" rx="13" fill="white" opacity="0.95"/>
+
+    <!-- 第四项 - 待办 -->
+    <circle cx="300" cy="740" r="35" stroke="white" stroke-width="5" fill="none" opacity="0.8"/>
+    <rect x="370" y="727" width="320" height="26" rx="13" fill="white" opacity="0.7"/>
+  </g>
+
+  <!-- 右上角小番茄 - 方案一样式+两片叶子 -->
+  <g opacity="0.5">
+    <!-- 番茄主体 - 简单圆形 -->
+    <circle cx="780" cy="245" r="28" fill="#FF6347"/>
+
+    <!-- 左叶子 -->
+    <path d="M 780 217 Q 768 222 766 232"
+          stroke="#7CB342" stroke-width="4"
+          stroke-linecap="round" fill="none"/>
+
+    <!-- 右叶子 -->
+    <path d="M 780 217 Q 792 222 794 232"
+          stroke="#7CB342" stroke-width="4"
+          stroke-linecap="round" fill="none"/>
+  </g>
+</svg>
