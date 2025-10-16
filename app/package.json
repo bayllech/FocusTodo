@@ -10,7 +10,9 @@
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build",
-    "tauri:icon": "tauri icon"
+    "tauri:icon": "tauri icon",
+    "build:local": "node ../scripts/build-local.js",
+    "release": "node ../scripts/release.js"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.8.4",
