@@ -397,12 +397,51 @@ body[data-window='floating'] #app {
 
 .config-card {
   border-radius: 14px;
-  border: 1px solid var(--floating-border-color);
+  border: 1px solid var(--focus-color-border);
   padding: 16px;
-  background: rgba(255, 255, 255, 0.5);
+  background: var(--focus-surface-card);
   display: flex;
   flex-direction: column;
   gap: 6px;
+  box-shadow: 0 12px 30px var(--focus-shadow-soft);
+}
+
+.config-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.config-grid-editable {
+  align-items: stretch;
+}
+
+.config-card-input {
+  gap: 12px;
+}
+
+.config-card-input input[type='number'] {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid var(--focus-color-border);
+  padding: 10px 12px;
+  font-size: 18px;
+  font-weight: 600;
+  background: var(--focus-input-bg);
+  color: var(--focus-color-text);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.config-card-input input[type='number']:focus {
+  outline: none;
+  border-color: var(--focus-color-accent);
+  box-shadow: 0 0 0 3px var(--focus-focus-ring-shadow);
+  background: var(--focus-input-bg);
+}
+
+.config-card-input input[type='number']:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .config-label {
@@ -419,7 +458,17 @@ body[data-window='floating'] #app {
   padding: 12px 16px;
   border-radius: 12px;
   border: 1px solid var(--focus-color-border);
-  background: rgba(255, 255, 255, 0.45);
+  background: var(--focus-surface-muted);
+  color: var(--focus-color-text);
+  box-shadow: 0 10px 24px var(--focus-shadow-soft);
+}
+
+.config-actions-save {
+  justify-content: flex-start;
+}
+
+.config-actions-save .primary-button {
+  min-width: 140px;
 }
 
 .config-toggle {
@@ -428,6 +477,20 @@ body[data-window='floating'] #app {
   gap: 10px;
   font-size: 14px;
   font-weight: 600;
+}
+
+.config-subtitle {
+  margin: 28px 0 12px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.config-grid-stats {
+  margin-top: 8px;
+}
+
+.config-grid-stats .config-card strong {
+  font-size: 20px;
 }
 
 .config-toggle input[type='checkbox'] {
@@ -498,6 +561,17 @@ body[data-window='floating'] #app {
 }
 
 :root {
+  /* 通用主题变量，与番茄钟样式复用 */
+  --bg-primary: var(--focus-surface-card, #ffffff);
+  --bg-secondary: var(--focus-color-bg-elevated, #f8fafc);
+  --bg-hover: var(--focus-secondary-hover-bg, rgba(37, 99, 235, 0.08));
+  --text-primary: var(--focus-color-text, #0f172a);
+  --text-secondary: var(--focus-color-text-secondary, #475569);
+  --text-tertiary: rgba(148, 163, 184, 0.85);
+  --accent: var(--focus-color-accent, #2563eb);
+  --accent-hover: rgba(37, 99, 235, 0.85);
+  --border-color: var(--focus-color-border, rgba(148, 163, 184, 0.25));
+
   --floating-shell-bg: rgba(13, 20, 34, 0.92);
   --floating-surface-bg: rgba(18, 27, 46, 0.94);
   --floating-card-bg: rgba(25, 37, 60, 0.95);
@@ -553,6 +627,17 @@ body[data-window='floating'] #app {
   padding: 6px 12px;
   cursor: pointer;
   transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.floating-button.active {
+  background: var(--floating-accent-bg);
+  border-color: var(--floating-accent-hover-bg);
+  color: #0f172a;
+}
+
+.floating-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .floating-button:hover {
@@ -625,6 +710,28 @@ body[data-window='floating'] #app {
   font-size: 12px;
   color: rgba(226, 232, 240, 0.85);
 }
+
+.floating-pomodoro-inline {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  align-items: center;
+  gap: 12px;
+  padding: 6px 0;
+}
+.floating-pomodoro-stats {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  color: rgba(226, 232, 240, 0.85);
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+.floating-pomodoro-stats span + span::before {
+  content: '•';
+  margin: 0 4px;
+  opacity: 0.5;
+}
+
 
 .floating-todo-container {
   flex: 1;

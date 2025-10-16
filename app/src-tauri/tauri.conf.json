@@ -60,6 +60,7 @@
             "core:window:allow-set-size",
             "core:webview:allow-webview-position",
             "core:webview:allow-webview-size",
+            "core:window:allow-set-always-on-top",
             "core:window:allow-outer-position",
             "core:window:allow-outer-size"
           ]
@@ -76,7 +77,8 @@
             "core:window:allow-close",
             "core:window:allow-set-focus",
             "core:window:allow-is-visible",
-            "core:window:allow-start-dragging"
+            "core:window:allow-start-dragging",
+            "core:window:allow-set-always-on-top"
           ]
         }
       ]

@@ -48,8 +48,7 @@ export const ensureNotificationPermission = async (): Promise<boolean> => {
   try {
     const permission = await requestPermission()
     return permission === 'granted'
-  } catch (error) {
-    console.error('请求通知权限失败', error)
+  } catch {
     return false
   }
 }

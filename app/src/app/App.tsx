@@ -1,5 +1,5 @@
 import dayjs from 'dayjs'
-import type { FormEvent } from 'react'
+import type { ChangeEvent, FormEvent } from 'react'
 import { useEffect, useMemo, useState } from 'react'
 
 import { PomodoroTimer } from './components/PomodoroTimer'
@@ -9,7 +9,12 @@ import { useSettingsStore } from './stores/settingsStore'
 import { useTodoStore } from './stores/todoStore'
 import { useWindowStateSync } from './hooks/useWindowStateSync'
 import { ensureNotificationPermission } from './utils/notifications'
-import type { PomodoroSession, TodoItem, TodoPriority } from './types'
+import type {
+  PomodoroConfig,
+  PomodoroSession,
+  TodoItem,
+  TodoPriority,
+} from './types'
 
 const isTauri =
   typeof window !== 'undefined' && '__TAURI_INTERNALS__' in window
@@ -31,6 +36,11 @@ const sessionLabels: Record<PomodoroSession['type'], string> = {
   shortBreak: '短休',
   longBreak: '长休',
 }
+
+type ConfigDraft = Pick<
+  PomodoroConfig,
+  'focusMinutes' | 'shortBreakMinutes' | 'longBreakMinutes' | 'longBreakInterval'
+>
 
 
 const createEmptyFormValues = (): TodoFormValues => ({
@@ -109,13 +119,19 @@ export const App = () => {
   // 数据选择器:提取状态数据
   const config = usePomodoroStore((state) => state.config)
   const sessions = usePomodoroStore((state) => state.sessions)
-  const pomodoroLoading = usePomodoroStore((state) => state.loading)
   const pomodoroError = usePomodoroStore((state) => state.error)
   // 函数选择器:直接提取函数
   const loadConfig = usePomodoroStore((state) => state.loadConfig)
   const loadSessions = usePomodoroStore((state) => state.loadSessions)
   const saveConfig = usePomodoroStore((state) => state.saveConfig)
   const clearPomodoroError = usePomodoroStore((state) => state.clearError)
+
+  const [configDraft, setConfigDraft] = useState<ConfigDraft>(() => ({
+    focusMinutes: config.focusMinutes,
+    shortBreakMinutes: config.shortBreakMinutes,
+    longBreakMinutes: config.longBreakMinutes,
+    longBreakInterval: config.longBreakInterval,
+  }))
 
   useEffect(() => {
     void loadSettings()
@@ -130,6 +146,20 @@ export const App = () => {
   useEffect(() => {
     void ensureNotificationPermission()
   }, [])
+
+  useEffect(() => {
+    setConfigDraft({
+      focusMinutes: config.focusMinutes,
+      shortBreakMinutes: config.shortBreakMinutes,
+      longBreakMinutes: config.longBreakMinutes,
+      longBreakInterval: config.longBreakInterval,
+    })
+  }, [
+    config.focusMinutes,
+    config.shortBreakMinutes,
+    config.longBreakMinutes,
+    config.longBreakInterval,
+  ])
 
   const sortedTodos = useMemo(() => {
     return [...todos].sort((a, b) => {
@@ -174,6 +204,51 @@ export const App = () => {
     }, 0)
     return { focusCompleted, minutes }
   }, [sessions, config])
+
+  const configDirty =
+    configDraft.focusMinutes !== config.focusMinutes ||
+    configDraft.shortBreakMinutes !== config.shortBreakMinutes ||
+    configDraft.longBreakMinutes !== config.longBreakMinutes ||
+    configDraft.longBreakInterval !== config.longBreakInterval
+
+  const handleConfigDraftChange = (
+    field: keyof ConfigDraft,
+    value: number,
+  ) => {
+    setConfigDraft((prev) => {
+      if (prev[field] === value) {
+        return prev
+      }
+      return {
+        ...prev,
+        [field]: value,
+      }
+    })
+  }
+
+  const handleConfigFieldChange =
+    (field: keyof ConfigDraft) => (event: ChangeEvent<HTMLInputElement>) => {
+      const parsed = Number.parseInt(event.target.value, 10)
+      const safeValue = Number.isNaN(parsed) ? 1 : Math.max(1, parsed)
+      handleConfigDraftChange(field, safeValue)
+    }
+
+  const handleConfigSubmit = async (event?: FormEvent<HTMLFormElement>) => {
+    event?.preventDefault()
+    if (!configDirty) return
+    setSavingConfig(true)
+    try {
+      clearPomodoroError()
+      await saveConfig({
+        ...config,
+        ...configDraft,
+      })
+    } catch {
+      // 错误信息通过 store 暴露
+    } finally {
+      setSavingConfig(false)
+    }
+  }
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault()
@@ -274,7 +349,6 @@ const handleModalSubmit = async (form: TodoFormValues) => {
     }
     handleModalClose()
   } catch (error) {
-    console.error('保存待办失败', error)
     alert('保存待办失败：' + (error instanceof Error ? error.message : String(error)))
   } finally {
     setModalSaving(false)
@@ -291,7 +365,6 @@ const handleModalDelete = async () => {
     await removeTodo(activeTodo.id)
     handleModalClose()
   } catch (error) {
-    console.error('删除待办失败', error)
     alert('删除待办失败：' + (error instanceof Error ? error.message : String(error)))
   } finally {
     setModalDeleting(false)
@@ -335,7 +408,6 @@ const handleResetFilters = () => {
         await floating.setFocus()
       }
     } catch (error) {
-      console.error('切换悬浮窗失败', error)
       alert('切换悬浮窗失败: ' + error)
     } finally {
       setFloatingBusy(false)
@@ -365,7 +437,7 @@ const handleResetFilters = () => {
         await emit('opacity-changed', { opacity: value })
       }
     } catch (error) {
-      console.error('更新透明度失败', error)
+      alert('更新透明度失败：' + (error instanceof Error ? error.message : String(error)))
     } finally {
       setAdjustingOpacity(false)
     }
@@ -558,18 +630,6 @@ const handleResetFilters = () => {
               <h2>番茄时钟</h2>
               <p>使用番茄工作法保持专注，完成后会自动记录并发送通知。</p>
             </div>
-            <button
-              type="button"
-              className="ghost-button"
-              onClick={() => {
-                clearPomodoroError()
-                void loadConfig()
-                void loadSessions(today)
-              }}
-              disabled={pomodoroLoading}
-            >
-              {pomodoroLoading ? '同步中…' : '刷新记录'}
-            </button>
           </header>
 
           {pomodoroError ? (
@@ -579,70 +639,130 @@ const handleResetFilters = () => {
           <PomodoroTimer />
 
           <div className="config-summary">
-            <h3>当前配置</h3>
-            <div className="config-grid">
-            <div className="config-card">
-              <span className="config-label">专注时长</span>
-              <strong>{config.focusMinutes} 分钟</strong>
-            </div>
-            <div className="config-card">
-              <span className="config-label">短休时长</span>
-              <strong>{config.shortBreakMinutes} 分钟</strong>
-            </div>
-            <div className="config-card">
-              <span className="config-label">长休时长</span>
-              <strong>{config.longBreakMinutes} 分钟</strong>
-            </div>
-            <div className="config-card">
-              <span className="config-label">长休间隔</span>
-              <strong>每 {config.longBreakInterval} 轮</strong>
-            </div>
-            <div className="config-card">
-              <span className="config-label">今日统计</span>
-              <strong>
-                {pomodoroSummary.focusCompleted} 个番茄 ·{' '}
-                {formatMinutes(pomodoroSummary.minutes)}
-              </strong>
-            </div>
-          </div>
+            <h3>计时设置</h3>
+            <form
+              className="config-form"
+              onSubmit={(event) => {
+                void handleConfigSubmit(event)
+              }}
+            >
+              <div className="config-grid config-grid-editable">
+                <label className="config-card config-card-input">
+                  <span className="config-label">专注时长（分钟）</span>
+                  <input
+                    type="number"
+                    min={1}
+                    step={1}
+                    inputMode="numeric"
+                    value={configDraft.focusMinutes}
+                    onChange={handleConfigFieldChange('focusMinutes')}
+                    disabled={savingConfig}
+                  />
+                </label>
+                <label className="config-card config-card-input">
+                  <span className="config-label">短休时长（分钟）</span>
+                  <input
+                    type="number"
+                    min={1}
+                    step={1}
+                    inputMode="numeric"
+                    value={configDraft.shortBreakMinutes}
+                    onChange={handleConfigFieldChange('shortBreakMinutes')}
+                    disabled={savingConfig}
+                  />
+                </label>
+                <label className="config-card config-card-input">
+                  <span className="config-label">长休时长（分钟）</span>
+                  <input
+                    type="number"
+                    min={1}
+                    step={1}
+                    inputMode="numeric"
+                    value={configDraft.longBreakMinutes}
+                    onChange={handleConfigFieldChange('longBreakMinutes')}
+                    disabled={savingConfig}
+                  />
+                </label>
+                <label className="config-card config-card-input">
+                  <span className="config-label">长休间隔（轮次）</span>
+                  <input
+                    type="number"
+                    min={1}
+                    step={1}
+                    inputMode="numeric"
+                    value={configDraft.longBreakInterval}
+                    onChange={handleConfigFieldChange('longBreakInterval')}
+                    disabled={savingConfig}
+                  />
+                </label>
+              </div>
+              <div className="config-actions config-actions-save">
+                <button
+                  type="submit"
+                  className="primary-button"
+                  disabled={!configDirty || savingConfig}
+                >
+                  {savingConfig ? '保存中…' : '保存设置'}
+                </button>
+                <span className="toggle-hint">
+                  {configDirty
+                    ? '修改尚未保存，保存后主界面与悬浮窗将同步。'
+                    : '当前设置已与服务器保持一致。'}
+                </span>
+              </div>
+            </form>
 
-          <div className="config-actions">
-            <label className="config-toggle">
-              <input
-                type="checkbox"
-                checked={config.autoStartNext}
-                onChange={() => void handleToggleAutoStart()}
-                disabled={savingConfig}
-              />
-              <span>自动进入下一阶段</span>
-            </label>
-            <span className="toggle-hint">
-              {savingConfig
-                ? '保存中…'
-                : '启用后番茄结束将自动切换到休息阶段'}
-            </span>
-          </div>
-
-          <div className="config-actions">
-            <div className="opacity-control">
-              <label>
-                <span>悬浮窗透明度</span>
+            <div className="config-actions">
+              <label className="config-toggle">
                 <input
-                  type="range"
-                  min="0.3"
-                  max="1"
-                  step="0.05"
-                  value={settings.floatingOpacity}
-                  onChange={(e) => void handleOpacityChange(parseFloat(e.target.value))}
-                  disabled={adjustingOpacity}
+                  type="checkbox"
+                  checked={config.autoStartNext}
+                  onChange={() => void handleToggleAutoStart()}
+                  disabled={savingConfig}
                 />
-                <span className="opacity-value">{Math.round(settings.floatingOpacity * 100)}%</span>
+                <span>自动开始下一阶段</span>
               </label>
+              <span className="toggle-hint">
+                {savingConfig
+                  ? '保存中…'
+                  : '开启后每个阶段结束会自动切换并继续计时。'}
+              </span>
             </div>
-            <span className="toggle-hint">
-              {adjustingOpacity ? '调整中…' : '调整悬浮窗的透明度，需要CSS支持'}
-            </span>
-          </div>
+
+            <div className="config-actions">
+              <div className="opacity-control">
+                <label>
+                  <span>悬浮窗透明度</span>
+                  <input
+                    type="range"
+                    min="0.3"
+                    max="1"
+                    step="0.05"
+                    value={settings.floatingOpacity}
+                    onChange={(e) => void handleOpacityChange(parseFloat(e.target.value))}
+                    disabled={adjustingOpacity}
+                  />
+                  <span className="opacity-value">
+                    {Math.round(settings.floatingOpacity * 100)}%
+                  </span>
+                </label>
+              </div>
+              <span className="toggle-hint">
+                {adjustingOpacity ? '应用中…' : '快速调整悬浮窗透明度。'}
+              </span>
+            </div>
+
+            <h3 className="config-subtitle">今日统计</h3>
+            <div className="config-grid config-grid-stats">
+              <div className="config-card">
+                <span className="config-label">专注完成次数</span>
+                <strong>{pomodoroSummary.focusCompleted} 次</strong>
+              </div>
+              <div className="config-card">
+                <span className="config-label">累计计时</span>
+                <strong>{formatMinutes(pomodoroSummary.minutes)}</strong>
+              </div>
+            </div>
           </div>
 
           <div className="session-list">

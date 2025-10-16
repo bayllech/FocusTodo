@@ -44,8 +44,7 @@ export const useWindowStateSync = () => {
               width: size.width,
               height: size.height,
             }
-          } catch (error) {
-            console.error('Failed to read window geometry', error)
+          } catch {
             return {}
           }
         }
@@ -54,8 +53,8 @@ export const useWindowStateSync = () => {
           try {
             const geometry = await readGeometry()
             await persistWindowGeometry(windowLabel, geometry)
-          } catch (error) {
-            console.error('Failed to persist window geometry', error)
+          } catch {
+            // 忽略持久化失败，继续使用内存状态
           }
         }
 
@@ -90,14 +89,14 @@ export const useWindowStateSync = () => {
 
               try {
                 await currentWindow.hide()
-              } catch (error) {
-                console.error('Failed to hide window', error)
+              } catch {
+                // 忽略隐藏窗口失败
               }
             },
           ),
         )
-      } catch (error) {
-        console.error('Failed to initialise window state sync', error)
+      } catch {
+        // 忽略窗口同步初始化失败
       }
     }
 
@@ -111,8 +110,8 @@ export const useWindowStateSync = () => {
       unlistenList.forEach((unlisten) => {
         try {
           unlisten()
-        } catch (error) {
-          console.error('Failed to remove window listeners', error)
+        } catch {
+          // 忽略事件清理失败
         }
       })
     }

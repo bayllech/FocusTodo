@@ -10,6 +10,90 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
+.pomodoro-timer.bare {
+  align-items: flex-start;
+  gap: 0.25rem;
+  padding: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.pomodoro-timer.compact {
+  align-items: stretch;
+  gap: 0.75rem;
+  padding: 0.85rem 1rem;
+  box-shadow: none;
+}
+
+.pomodoro-timer.minimal {
+  width: 100%;
+}
+
+.timer-strip {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.timer-strip-stage {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #3b82f6;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.12);
+}
+
+.timer-strip-sub {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: rgba(37, 99, 235, 0.75);
+}
+
+.timer-strip-time {
+  font-size: 2.2rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: #3b82f6;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.timer-strip-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.timer-strip-button {
+  padding: 0.3rem 0.75rem;
+  font-size: 0.75rem;
+  border-radius: 999px;
+  border: 1px solid var(--accent);
+  background: transparent;
+  color: var(--accent);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.timer-strip-button:hover {
+  background: rgba(37, 99, 235, 0.12);
+}
+
+.timer-strip-button.muted {
+  border-color: rgba(100, 116, 139, 0.65);
+  color: rgba(148, 163, 184, 0.95);
+}
+
+.timer-strip-button.muted:hover {
+  background: rgba(148, 163, 184, 0.12);
+}
+
 .timer-header {
   width: 100%;
 }
@@ -35,6 +119,16 @@
   transition: all 0.2s;
 }
 
+.pomodoro-timer.compact .type-button {
+  padding: 0.35rem 0.75rem;
+  font-size: 0.8rem;
+}
+
+.pomodoro-timer.bare .type-button {
+  padding: 0.15rem 0.45rem;
+  font-size: 0.75rem;
+}
+
 .type-button:hover:not(:disabled) {
   background: var(--bg-hover);
   color: var(--text-primary);
@@ -57,6 +151,36 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.pomodoro-timer.compact .timer-display {
+  display: none;
+}
+
+.pomodoro-timer.bare .timer-simple {
+  padding: 0;
+  background: transparent;
+}
+
+.pomodoro-timer.bare .timer-simple-time {
+  font-size: 1.8rem;
+}
+
+.timer-simple {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0.25rem 0.5rem;
+  border-radius: 8px;
+  background: rgba(148, 163, 184, 0.15);
+}
+
+.timer-simple-time {
+  font-size: 2rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
 }
 
 .timer-circle {
@@ -95,6 +219,15 @@
 .timer-controls {
   display: flex;
   gap: 0.75rem;
+}
+
+.timer-controls.compact {
+  justify-content: flex-start;
+  gap: 0.5rem;
+}
+
+.pomodoro-timer.bare .timer-controls {
+  gap: 0.4rem;
 }
 
 .timer-button {
@@ -138,6 +271,30 @@
   transform: translateY(-1px);
 }
 
+.pomodoro-timer.compact .timer-button {
+  min-width: 80px;
+  padding: 0.45rem 1rem;
+  font-size: 0.85rem;
+}
+
+.pomodoro-timer.compact .timer-button.reset {
+  background: rgba(100, 116, 139, 0.65);
+}
+
+.pomodoro-timer.bare .timer-button {
+  min-width: auto;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.75rem;
+}
+
+.pomodoro-timer.bare .timer-button.pause {
+  background: rgba(245, 158, 11, 0.85);
+}
+
+.pomodoro-timer.bare .timer-button.reset {
+  background: rgba(100, 116, 139, 0.6);
+}
+
 .timer-info {
   text-align: center;
 }
@@ -151,6 +308,21 @@
 .timer-stats {
   font-size: 0.75rem;
   color: var(--text-tertiary);
+}
+
+.pomodoro-timer.bare .timer-meta {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  gap: 0.4rem;
+}
+
+.timer-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  gap: 0.5rem;
 }
 
 /* 配置摘要区域 */
@@ -169,61 +341,13 @@
 }
 
 /* 悬浮窗番茄钟样式 */
-.floating-pomodoro {
-  padding: 0.75rem 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 8px;
-  margin-bottom: 0.75rem;
-}
 
-.pomodoro-config-mini {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
-}
 
-.pomodoro-config-mini .config-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-}
 
-.pomodoro-config-mini .label {
-  font-size: 0.75rem;
-  color: var(--text-tertiary);
-}
 
-.pomodoro-config-mini .value {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: var(--text-primary);
-}
 
-.pomodoro-hint {
-  font-size: 0.7rem;
-  text-align: center;
-  color: var(--text-tertiary);
-  margin: 0;
-}
 
 /* 悬浮窗简化版样式 */
-.floating-timer {
-  padding: 0.75rem;
-}
 
-.floating-timer .timer-time {
-  font-size: 1.5rem;
-}
 
-.floating-timer .timer-display {
-  width: 120px;
-  height: 120px;
-}
 
-.floating-timer .timer-button {
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  min-width: 60px;
-}

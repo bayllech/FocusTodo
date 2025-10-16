@@ -26,6 +26,7 @@ interface SettingsState {
   saveSettings: (settings: UserSettings) => Promise<UserSettings>
   updateFloatingOpacity: (opacity: number) => Promise<void>
   toggleShowCompleted: () => Promise<void>
+  toggleAlwaysOnTop: (next?: boolean) => Promise<void>
   persistWindowGeometry: (label: 'main' | 'floating', geometry: WindowGeometry) => Promise<void>
   clearError: () => void
 }
@@ -83,6 +84,18 @@ export const useSettingsStore = create<SettingsState>((set, get) => ({
   async toggleShowCompleted() {
     const current = get().settings
     const updated = { ...current, showCompletedInFloating: !current.showCompletedInFloating }
+    try {
+      const saved = await saveSettings(updated)
+      set({ settings: saved })
+    } catch (error) {
+      set({ error: toMessage(error) })
+      throw error
+    }
+  },
+  async toggleAlwaysOnTop(next) {
+    const current = get().settings
+    const target = typeof next === 'boolean' ? next : !current.alwaysOnTop
+    const updated = { ...current, alwaysOnTop: target }
     try {
       const saved = await saveSettings(updated)
       set({ settings: saved })
