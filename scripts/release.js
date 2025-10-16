@@ -119,13 +119,30 @@ async function main() {
     // 1. 验证环境
     log(COLOR.BLUE, '📋 检查环境...');
 
-    // 检查是否在项目根目录
-    const tauriConfPath = path.join(process.cwd(), 'app/src-tauri/tauri.conf.json');
-    const cargoTomlPath = path.join(process.cwd(), 'app/src-tauri/Cargo.toml');
+    // 确定项目根目录
+    // 脚本位于 scripts/release.js，所以往上两级
+    let projectRoot = process.cwd();
+
+    // 如果在 app 目录，往上走一级
+    if (projectRoot.endsWith('app')) {
+      projectRoot = path.dirname(projectRoot);
+    }
+
+    // 再检查一次，如果在 scripts 目录，往上走两级
+    if (projectRoot.endsWith('scripts')) {
+      projectRoot = path.dirname(path.dirname(projectRoot));
+    }
+
+    // 检查是否在项目根目录或其子目录
+    const tauriConfPath = path.join(projectRoot, 'app/src-tauri/tauri.conf.json');
+    const cargoTomlPath = path.join(projectRoot, 'app/src-tauri/Cargo.toml');
 
     if (!fs.existsSync(tauriConfPath) || !fs.existsSync(cargoTomlPath)) {
-      throw new Error('项目文件未找到，请在项目根目录运行此脚本');
+      throw new Error(`项目文件未找到。请在项目根目录或 app 目录运行此脚本\n  检查路径: ${tauriConfPath}`);
     }
+
+    // 切换到项目根目录
+    process.chdir(projectRoot);
 
     // 检查 git 状态
     const gitStatus = exec('git status --porcelain', true);
