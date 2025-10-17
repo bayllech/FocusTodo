@@ -2,7 +2,7 @@
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
   "productName": "FocusTodo",
   "mainBinaryName": "FocusTodo",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "identifier": "com.focustodo.desktop",
   "build": {
     "frontendDist": "../dist",
