@@ -19,7 +19,7 @@ jobs:
             args: ''
           - os: macos-latest
             platform: macos
-            args: '--target universal'
+            args: '--target universal-apple-darwin'
 
     steps:
       - name: Checkout repository
@@ -63,7 +63,7 @@ jobs:
           name: macos-artifacts
           path: |
             app/src-tauri/target/release/bundle/dmg/*.dmg
-            app/src-tauri/target/universal/release/bundle/dmg/*.dmg
+            app/src-tauri/target/universal-apple-darwin/release/bundle/dmg/*.dmg
 
   release:
     name: Create Release
